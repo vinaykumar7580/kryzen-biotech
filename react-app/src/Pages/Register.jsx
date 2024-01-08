@@ -7,15 +7,19 @@ import {
   Image,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios"
 
 function Register() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  const toast = useToast()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +29,32 @@ function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("form", formData);
+    //console.log("form", formData);
+    axios.post("http://localhost:8080/user/register", formData)
+    .then((res)=>{
+      console.log(res.data.msg)
+      toast({
+        title: `${res.data.msg}`,
+        status: 'success',
+        position:"top",
+        duration: 3000,
+        isClosable: true,
+      })
+
+    })
+    .catch((err)=>{
+      console.log(err)
+      toast({
+        title: `User Registration Failed`,
+        status: 'error',
+        position:"top",
+        duration: 3000,
+        isClosable: true,
+      })
+
+    })
+    
+
 
     setFormData({
       username: "",

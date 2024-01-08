@@ -7,15 +7,20 @@ import {
     Image,
     Input,
     Text,
+    useToast,
   } from "@chakra-ui/react";
+import axios from "axios";
   import { useState } from "react";
-  import { Link } from "react-router-dom";
+  import { Link, useNavigate } from "react-router-dom";
   
   function Login() {
     const [formData, setFormData] = useState({
       username: "",
       password: "",
     });
+
+    const toast = useToast()
+    const navigate=useNavigate()
   
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -25,8 +30,33 @@ import {
     const handleSubmit = (e) => {
       e.preventDefault();
   
-      console.log("form", formData);
-      localStorage.setItem("token", "vinay")
+      //console.log("form", formData);
+      axios.post("http://localhost:8080/user/login", formData)
+      .then((res)=>{
+        console.log(res.data.msg)
+        localStorage.setItem("token", res.data.token)
+        toast({
+          title: `${res.data.msg}`,
+          status: 'success',
+          position:"top",
+          duration: 3000,
+          isClosable: true,
+        })
+        navigate("/")
+  
+      })
+      .catch((err)=>{
+        console.log(err)
+        toast({
+          title: `User Login Failed`,
+          status: 'error',
+          position:"top",
+          duration: 3000,
+          isClosable: true,
+        })
+  
+      })
+      
       
   
       setFormData({
