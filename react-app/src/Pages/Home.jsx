@@ -67,7 +67,7 @@ function Home() {
     axios
       .get("http://localhost:8080/get-data", {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
           Authorization: `${localStorage.getItem("token")}`,
         },
       })
@@ -291,7 +291,7 @@ function Home() {
                     <Image
                       width={"50px"}
                       src={`http://localhost:8080/uploads/${el.photo}`}
-                      alt="Person"
+                      alt="person-image"
                     />
                   </Td>
                   <Td>{el.name}</Td>

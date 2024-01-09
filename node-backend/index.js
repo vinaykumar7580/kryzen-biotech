@@ -75,6 +75,25 @@ app.get("/get-data", async(req, res)=>{
     }
 })
 
+app.get("/get-data-details/:id", async(req, res)=>{
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, "masai");
+  const {id}=req.params
+  
+  try{
+      if(decoded){
+          let data= await DataModel.findOne({_id:id})
+          res.status(200).send(data)
+
+      }else{
+          res.status(500).send({msg:"Please Login First"})
+      }
+
+  }catch(err){
+      res.status(500).json({ error: err });
+  }
+})
+
 app.listen(8080, async () => {
   try {
     await connection;
