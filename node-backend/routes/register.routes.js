@@ -45,4 +45,23 @@ userRouter.post("/login", async(req,res)=>{
     }
 })
 
+userRouter.get("/userdata", async(req,res)=>{
+    const token=req.headers.authorization;
+    const decoded = jwt.verify(token, 'masai');
+    let userID=decoded.userId
+
+    
+    try{
+        if(decoded){
+            let user=await RegisterModel.findOne({_id:userID})
+            res.status(200).send(user)
+        }else{
+            res.status(500).send({msg:"Please Login First"})
+        }
+
+    }catch(err){
+        res.status(500).send({error:err})
+    }
+})
+
 module.exports={userRouter}
