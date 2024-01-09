@@ -2,6 +2,7 @@ import { Box, Button, Heading, Image } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import html2pdf from "html2pdf.js";
 
 function Preview() {
   const [data, setData] = useState({});
@@ -27,6 +28,31 @@ function Preview() {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const convertToBase64 = async (image) => {
+    const response = await fetch(`http://localhost:8080/uploads/${image}`);
+    const blob = await response.blob();
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const handleDownload = async () => {
+    const content = document.getElementById("downloadBox");
+
+    // Convert image to base64
+    const imageSrc = await convertToBase64(data?.photo);
+
+    // Update the image source before creating the PDF
+    const imgElement = content.querySelector("img");
+    imgElement.src = imageSrc;
+
+    // Generate PDF
+    html2pdf(content);
   };
 
   return (
@@ -55,19 +81,19 @@ function Preview() {
           <Button colorScheme="red" onClick={() => navigate("/")}>
             Home
           </Button>
-          <Button colorScheme="green">Download</Button>
+          <Button colorScheme="green" onClick={handleDownload}>
+            Download
+          </Button>
         </Box>
       </Box>
 
       <Box
-        width={"30%"}
+        id="downloadBox"
+        width={"40%"}
         m={"auto"}
         mt={"50px"}
         mb={"30px"}
         p={"20px"}
-        // display={"flex"}
-        // justifyContent={"left"}
-        // alignItems={"flex-start"}
         backgroundColor={"white"}
         borderRadius={"10px"}
         boxShadow="rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"
