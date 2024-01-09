@@ -21,19 +21,22 @@ function Register() {
 
   const toast = useToast();
 
+  //handleChange function update the value of formData
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  //handleSubmit function use for form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    //console.log("form", formData);
+    //make the post request for user register through axios and passing formData
     axios
       .post("http://localhost:8080/user/register", formData)
       .then((res) => {
         console.log(res.data.msg);
+        // toast is use for showing alert on UI
         toast({
           title: `${res.data.msg}`,
           status: "success",
@@ -43,6 +46,7 @@ function Register() {
         });
       })
       .catch((err) => {
+        //this err is print, when error occur in the post request
         console.log(err);
         toast({
           title: `User Registration Failed`,
@@ -69,6 +73,7 @@ function Register() {
         "linear-gradient(223.23deg, rgb(133, 13, 99), rgb(92, 98, 214))"
       }
     >
+      {/* the Box contain register name heading and register form */}
       <Box
         w={"30%"}
         m={"auto"}
@@ -79,6 +84,8 @@ function Register() {
         <Heading fontSize={"3xl"} fontFamily={"serif"}>
           Register
         </Heading>
+
+        {/* The Box shows the register form on the UI with username and password input and submit button */}
         <Box mt={"10px"}>
           <FormControl>
             <FormLabel>User Name</FormLabel>
@@ -108,6 +115,8 @@ function Register() {
             Submit
           </Button>
         </Box>
+
+        {/* The Text element showing the link of login page  */}
         <Text mt={"30px"}>
           If you have account:{" "}
           <Link to={"/login"}>

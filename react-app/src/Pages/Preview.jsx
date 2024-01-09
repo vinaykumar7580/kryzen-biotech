@@ -14,9 +14,10 @@ function Preview() {
     handleDataDetails();
   }, []);
 
+  //handleDataDetails function fetch only single data which is data-form data stored in database with the help of id.
   const handleDataDetails = () => {
     axios
-      .get(`http://localhost:8080/get-data-details/${params.id}`, {
+      .get(`http://localhost:8080/data/get-data-details/${params.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${localStorage.getItem("token")}`,
@@ -30,6 +31,7 @@ function Preview() {
       });
   };
 
+  //convertToBase64 function convert image which is coming from backend upload folder to Base64 by caching image filename.
   const convertToBase64 = async (image) => {
     const response = await fetch(`http://localhost:8080/uploads/${image}`);
     const blob = await response.blob();
@@ -41,6 +43,7 @@ function Preview() {
     });
   };
 
+  //handleDownload function generate pdf with the help of html2pdf library and allows download the pdf to user.
   const handleDownload = async () => {
     const content = document.getElementById("downloadBox");
 
@@ -67,6 +70,7 @@ function Preview() {
           "linear-gradient(223.23deg, rgb(133, 13, 99), rgb(92, 98, 214))"
         }
       >
+        {/* This Box contain the navbar on the preview page */}
         <Box>
           <Heading fontSize={"3xl"} fontFamily={"serif"} color={"white"}>
             Data Preview
@@ -87,9 +91,10 @@ function Preview() {
         </Box>
       </Box>
 
+      {/* This Box shows the image, name, age, address on the preview page and this box content convert html2pdf library to pdf. */}
       <Box
         id="downloadBox"
-        width={"40%"}
+        width={"450px"}
         m={"auto"}
         mt={"50px"}
         mb={"30px"}

@@ -22,10 +22,12 @@ import {
 } from "@chakra-ui/react";
 import builder from "../Components/builder.png";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "../Context/AuthContext";
 
 function Home() {
+  // userData store the user details who's login
   const [userData, setUserData] = useState({});
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({
@@ -37,11 +39,13 @@ function Home() {
 
   const navigate = useNavigate();
   const toast = useToast();
+  const { handleLogout } = useContext(AuthContext);
 
   useEffect(() => {
     getUserDetails();
   }, []);
 
+  //getUserDetails function making the get request through axios for getting user data who's login
   const getUserDetails = () => {
     axios
       .get("http://localhost:8080/user/userdata", {
@@ -63,9 +67,10 @@ function Home() {
     handleGetData();
   }, [data]);
 
+  //handleGetData function makes get request through axios for getting stored data which user added through data-form
   const handleGetData = () => {
     axios
-      .get("http://localhost:8080/get-data", {
+      .get("http://localhost:8080/data/get-data", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${localStorage.getItem("token")}`,
@@ -79,19 +84,22 @@ function Home() {
       });
   };
 
+  //handleChange function update the value of formData
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  //handlePhotoChange function update the value of photo key in the formData
   const handlePhotoChange = (e) => {
     setFormData({ ...formData, photo: e.target.files[0] });
   };
 
+  //handleSubmit function use for form submission and making post request
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    //console.log("formData", formData);
+    //make the post request for adding user form data to the database through axios
     axios
       .post("http://localhost:8080/add-data", formData, {
         headers: {
@@ -127,8 +135,13 @@ function Home() {
     });
   };
 
-  const handleLogout = () => {
+  // handleLogoutButton function handle logout functionality and remove token from localstorage and navigate user to login page.
+  const handleLogoutButton = () => {
+    // remove token from localstorage
     localStorage.removeItem("token");
+    //handleLogout function coming from AuthContext.jsx file in the Context folder through context api and makes isAuth is false.
+    handleLogout();
+    // navigate user to login page
     navigate("/login");
   };
 
@@ -137,7 +150,7 @@ function Home() {
 
   return (
     <Box>
-      {/* navbar box */}
+      {/*The below Box is showing navbar on Home page */}
       <Box
         display={"flex"}
         justifyContent={"space-between"}
@@ -148,20 +161,26 @@ function Home() {
           "linear-gradient(223.23deg, rgb(133, 13, 99), rgb(92, 98, 214))"
         }
       >
+        {/* The Box which shows logo image on the navbar */}
         <Box w={"170px"}>
           <Image w={"100%"} h={"100%"} src={builder} alt="logo" />
         </Box>
+
+        {/* The Box which is placed in navbar right side and shows user name and image */}
         <Box
           display={"flex"}
           justifyContent={"center"}
           alignItems={"center"}
           gap={"10px"}
         >
+          {/* The Box shows login user name on the navbar */}
           <Box>
             <Text fontWeight={"bold"} color={"white"}>
               {userData && userData?.username}
             </Text>
           </Box>
+
+          {/* This Box shows profile image on the navbar rightside. when click on that image, popup will be opening and user can see the logout button */}
           <Box cursor={"pointer"}>
             <Popover>
               <PopoverTrigger>
@@ -172,14 +191,16 @@ function Home() {
                   alt="Dan Abramov"
                 />
               </PopoverTrigger>
+
               <PopoverContent>
                 <PopoverArrow />
                 <br />
+                {/* This Button is Logout Button which a user can see when click on the profile image on navbar */}
                 <Button
                   w="100px"
                   m="auto"
                   colorScheme="orange"
-                  onClick={handleLogout}
+                  onClick={handleLogoutButton}
                 >
                   Logout
                 </Button>
@@ -189,7 +210,8 @@ function Home() {
           </Box>
         </Box>
       </Box>
-      {/* data form */}
+
+      {/*Box shows a data form. In which form user can enter name, age, address and photo   */}
       <Box
         w={"30%"}
         m={"auto"}
@@ -257,6 +279,7 @@ function Home() {
         </Box>
       </Box>
 
+      {/* This Box shows Table on the UI. Table shows information and preview button. */}
       <Box
         width={"70%"}
         m={"auto"}
@@ -283,11 +306,12 @@ function Home() {
           </Thead>
           <Tbody>
             {data &&
-              data?.map((el,index) => (
+              data?.map((el, index) => (
                 <Tr key={el._id}>
-                  <Td>{index+1}</Td>
-                  <Td >
+                  <Td>{index + 1}</Td>
+                  <Td>
                     {" "}
+                    {/* Image src find the image filename on the backend uploads folder and render on the UI. */}
                     <Image
                       width={"50px"}
                       src={`http://localhost:8080/uploads/${el.photo}`}
@@ -297,8 +321,16 @@ function Home() {
                   <Td>{el.name}</Td>
                   <Td>{el.age}</Td>
                   <Td>{el.address}</Td>
+                  {/* Preview button navigate user to preview page */}
                   <Td>
-                    {el.name && <Button colorScheme={"orange"} onClick={()=>navigate(`/preview/${el._id}`)}>Preview</Button>}
+                    {el.name && (
+                      <Button
+                        colorScheme={"orange"}
+                        onClick={() => navigate(`/preview/${el._id}`)}
+                      >
+                        Preview
+                      </Button>
+                    )}
                   </Td>
                 </Tr>
               ))}

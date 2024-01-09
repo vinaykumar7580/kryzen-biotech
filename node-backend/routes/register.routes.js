@@ -4,6 +4,7 @@ const jwt=require("jsonwebtoken")
 const { RegisterModel } = require("../model/register.model");
 const userRouter=express.Router()
 
+// /register route use for post request and stored user registration data
 userRouter.post("/register", async(req,res)=>{
     const {username, password}=req.body;
     try{
@@ -24,6 +25,7 @@ userRouter.post("/register", async(req,res)=>{
     }
 })
 
+// /login route allows user to login and generate token with the help of jsonwebtoken
 userRouter.post("/login", async(req,res)=>{
     const {username, password}=req.body;
     const user=await RegisterModel.findOne({username})
@@ -45,6 +47,7 @@ userRouter.post("/login", async(req,res)=>{
     }
 })
 
+// userdata route provide a single user details with the help of _id
 userRouter.get("/userdata", async(req,res)=>{
     const token=req.headers.authorization;
     const decoded = jwt.verify(token, 'masai');

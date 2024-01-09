@@ -4,9 +4,10 @@ import { Navigate } from "react-router-dom";
 
 
 function PrivateRoute({children}){
-    const {token}=useContext(AuthContext)
+    const {isAuth}=useContext(AuthContext)
 
-    if(token==null){
+    //if isAuth is false, then user will be navigate to login page
+    if(!isAuth){
         return <Navigate to="/login" />
     }
     return children
