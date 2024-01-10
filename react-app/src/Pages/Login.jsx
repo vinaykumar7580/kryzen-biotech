@@ -36,7 +36,7 @@ function Login() {
 
     //make the post request for user login through axios and passing formData
     axios
-      .post("http://localhost:8080/user/login", formData)
+      .post("https://poised-plum-gharial.cyclic.app/user/login", formData)
       .then((res) => {
         console.log(res.data.msg);
         //handleLogin function coming from AuthContext.jsx file in the Context folder through context api and make isAuth is true.

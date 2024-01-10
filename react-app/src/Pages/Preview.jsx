@@ -17,10 +17,10 @@ function Preview() {
   //handleDataDetails function fetch only single data which is data-form data stored in database with the help of id.
   const handleDataDetails = () => {
     axios
-      .get(`http://localhost:8080/data/get-data-details/${params.id}`, {
+      .get(`https://poised-plum-gharial.cyclic.app/data/get-data-details/${params.id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("token")}`,
+          "Authorization": `${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
@@ -33,7 +33,7 @@ function Preview() {
 
   //convertToBase64 function convert image which is coming from backend upload folder to Base64 by caching image filename.
   const convertToBase64 = async (image) => {
-    const response = await fetch(`http://localhost:8080/uploads/${image}`);
+    const response = await fetch(`https://poised-plum-gharial.cyclic.app/uploads/${image}`);
     const blob = await response.blob();
 
     return new Promise((resolve) => {
@@ -107,7 +107,7 @@ function Preview() {
           <Image
             w={"100%"}
             h={"100%"}
-            src={`http://localhost:8080/uploads/${data && data?.photo}`}
+            src={`https://poised-plum-gharial.cyclic.app/uploads/${data && data?.photo}`}
             alt="person-image"
           />
         </Box>

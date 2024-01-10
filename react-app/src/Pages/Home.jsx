@@ -48,10 +48,10 @@ function Home() {
   //getUserDetails function making the get request through axios for getting user data who's login
   const getUserDetails = () => {
     axios
-      .get("http://localhost:8080/user/userdata", {
+      .get("https://poised-plum-gharial.cyclic.app/user/userdata", {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("token")}`,
+          "Authorization": `${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
@@ -70,10 +70,10 @@ function Home() {
   //handleGetData function makes get request through axios for getting stored data which user added through data-form
   const handleGetData = () => {
     axios
-      .get("http://localhost:8080/data/get-data", {
+      .get("https://poised-plum-gharial.cyclic.app/data/get-data", {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("token")}`,
+          "Authorization": `${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
@@ -100,14 +100,18 @@ function Home() {
     e.preventDefault();
 
     //make the post request for adding user form data to the database through axios
+    
+    console.log("formData",formData)
+    
     axios
-      .post("http://localhost:8080/add-data", formData, {
+      .post("https://poised-plum-gharial.cyclic.app/data/add-data", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `${localStorage.getItem("token")}`,
+          
+          "Authorization": `${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
+
         toast({
           title: `${res.data.msg}`,
           status: "success",
@@ -146,7 +150,7 @@ function Home() {
   };
 
   const { name, age, address, photo } = formData;
-  console.log("data", data);
+  //console.log("data", data);
 
   return (
     <Box>
@@ -225,7 +229,8 @@ function Home() {
           Data Form
         </Heading>
         <Box mt={"10px"}>
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
+        
+          <form onSubmit={handleSubmit}>
             <FormControl>
               <FormLabel>Name</FormLabel>
               <Input
@@ -314,7 +319,7 @@ function Home() {
                     {/* Image src find the image filename on the backend uploads folder and render on the UI. */}
                     <Image
                       width={"50px"}
-                      src={`http://localhost:8080/uploads/${el.photo}`}
+                      src={`https://poised-plum-gharial.cyclic.app/uploads/${el.photo}`}
                       alt="person-image"
                     />
                   </Td>

@@ -33,7 +33,7 @@ function Register() {
 
     //make the post request for user register through axios and passing formData
     axios
-      .post("http://localhost:8080/user/register", formData)
+      .post("https://poised-plum-gharial.cyclic.app/user/register", formData)
       .then((res) => {
         console.log(res.data.msg);
         // toast is use for showing alert on UI
